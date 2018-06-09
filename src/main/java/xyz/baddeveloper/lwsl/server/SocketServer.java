@@ -43,23 +43,25 @@ public class SocketServer {
             serverSocket.setSoTimeout(timeout);
 
             connectEvents = new ArrayList<>();
+            disconnectEvents = new ArrayList<>();
         } catch (IOException e) {
             e.printStackTrace();
         }
         running = serverSocket != null;
+        if(!running) return;
         listen();
     }
 
     private void listen(){
         new Thread(() -> {
-            while(!serverSocket.isClosed() && serverSocket.isBound()){
-                try {
-                    Socket socket = serverSocket.accept();
-                    connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            while(!serverSocket.isClosed() && serverSocket.isBound()) try {
+                Socket socket = serverSocket.accept();
+                connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
+                if (!socket.isClosed()) new Thread(() -> {
+                    while (!serverSocket.isClosed())
+                        if (socket.isClosed() || !socket.isConnected()){disconnectEvents.forEach(disconnectEvent -> disconnectEvent.onDisconnect(socket)); return;}
+                }).start();
+            } catch (IOException ignored) {}
         }).start();
     }
 
