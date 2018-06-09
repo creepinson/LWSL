@@ -52,10 +52,7 @@ public class SocketServer {
             while(!serverSocket.isClosed() && serverSocket.isBound()) try {
                 Socket socket = serverSocket.accept();
                 connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
-                if (!socket.isClosed()) new Thread(() -> {
-                    while (!serverSocket.isClosed())
-                        if (socket.isClosed() || !socket.isConnected()){disconnectEvents.forEach(disconnectEvent -> disconnectEvent.onDisconnect(socket)); return;}
-                }).start();
+                new SocketHandler(this, socket).handle();
             } catch (IOException ignored) {}
         }).start();
         readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
@@ -129,5 +126,17 @@ public class SocketServer {
 
     public ServerSocket getServerSocket() {
         return serverSocket;
+    }
+
+    public List<OnConnectEvent> getConnectEvents() {
+        return connectEvents;
+    }
+
+    public List<OnDisconnectEvent> getDisconnectEvents() {
+        return disconnectEvents;
+    }
+
+    public List<OnReadyEvent> getReadyEvents() {
+        return readyEvents;
     }
 }
