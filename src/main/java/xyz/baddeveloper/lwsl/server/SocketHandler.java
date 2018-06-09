@@ -30,7 +30,6 @@ public class SocketHandler {
                 while (!socket.isClosed() && socket.isConnected()) {
 
                 }
-                socketServer.getDisconnectEvents().forEach(onDisconnectEvent -> onDisconnectEvent.onDisconnect(socket));
             }).start();
 
             // Make disconnect thread
