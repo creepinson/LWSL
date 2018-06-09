@@ -11,10 +11,6 @@ import java.util.List;
 
 public class SocketServer {
 
-    public static void main(String[] args){
-        new SocketServer().setPort(80).setMaxConnections(2);
-    }
-
     private int port;
     private int maxconnections;
     private int timeout;
