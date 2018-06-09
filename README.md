@@ -31,7 +31,7 @@ Don't forget to fill in the version where "VERSIONHERE" is present.
 
 ### Gradle
 
-``gradle
+```gradle
 	allprojects {
 		repositories {
 			...
