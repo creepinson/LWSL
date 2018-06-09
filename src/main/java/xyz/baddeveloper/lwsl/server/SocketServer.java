@@ -1,6 +1,7 @@
 package xyz.baddeveloper.lwsl.server;
 
 import xyz.baddeveloper.lwsl.server.events.OnConnectEvent;
+import xyz.baddeveloper.lwsl.server.events.OnDisconnectEvent;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,6 +20,7 @@ public class SocketServer {
     private int timeout;
 
     private List<OnConnectEvent> connectEvents;
+    private List<OnDisconnectEvent> disconnectEvents;
 
     private boolean running = false;
     private ServerSocket serverSocket;
