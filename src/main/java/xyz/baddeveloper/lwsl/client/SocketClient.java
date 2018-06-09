@@ -2,8 +2,10 @@ package xyz.baddeveloper.lwsl.client;
 
 import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +42,24 @@ public class SocketClient {
         listen();
     }
 
+    public void shutdown(){
+        try{
+            if(socket != null && !socket.isClosed()) socket.close();
+            connected = false;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     private void listen(){
         new Thread(() -> {
             while(!socket.isClosed() && socket.isConnected()){
-
+                try {
+                    
+                } catch (Exception e) {
+                    shutdown();
+                    break;
+                }
             }
         }).start();
     }
