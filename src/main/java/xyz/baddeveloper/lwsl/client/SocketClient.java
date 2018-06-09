@@ -14,7 +14,7 @@ public class SocketClient {
     private int timeout;
     private boolean keepalive;
 
-    private List<OnConnectEvent> connectEventList;
+    private List<OnConnectEvent> connectEventList = new ArrayList<>();;
 
     private boolean connected = false;
     private Socket socket;
@@ -31,7 +31,6 @@ public class SocketClient {
             socket.setKeepAlive(keepalive);
             socket.setSoTimeout(timeout);
 
-            connectEventList = new ArrayList<>();
         }catch (IOException e){
             e.printStackTrace();
         }
