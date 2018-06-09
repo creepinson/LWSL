@@ -3,7 +3,8 @@
 
 LWSL is an open source socket library made in Java.  
 Everyone can contribute by making pull requests.  
-If you have any issues / new features, present them in the issues tab.
+If you have any issues / new features, present them in the issues tab.  
+For a faster support, feel free to join my discord [here](https://discordapp.com/invite/dmr73XH).
 
 ## Usage
 **Project unfinished**
