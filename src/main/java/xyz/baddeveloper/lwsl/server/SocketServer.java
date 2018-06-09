@@ -15,8 +15,8 @@ public class SocketServer {
     private int maxconnections;
     private int timeout;
 
-    private List<OnConnectEvent> connectEvents;
-    private List<OnDisconnectEvent> disconnectEvents;
+    private List<OnConnectEvent> connectEvents = new ArrayList<>();
+    private List<OnDisconnectEvent> disconnectEvents = new ArrayList<>();
 
     private boolean running = false;
     private ServerSocket serverSocket;
@@ -37,9 +37,6 @@ public class SocketServer {
         try {
             serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(timeout);
-
-            connectEvents = new ArrayList<>();
-            disconnectEvents = new ArrayList<>();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,6 +61,26 @@ public class SocketServer {
     public void stop(){
         if(serverSocket != null && serverSocket.isClosed())
             try { serverSocket.close(); } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public SocketServer addDisconnectEvent(OnDisconnectEvent event){
+        disconnectEvents.add(event);
+        return this;
+    }
+
+    public SocketServer removeDisconnectEvent(OnDisconnectEvent event){
+        disconnectEvents.remove(event);
+        return this;
+    }
+
+    public SocketServer addConnectEvent(OnConnectEvent event){
+        connectEvents.add(event);
+        return this;
+    }
+
+    public SocketServer removeConnectEvent(OnConnectEvent event){
+        connectEvents.remove(event);
+        return this;
     }
 
     public SocketServer setPort(int port){
