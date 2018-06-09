@@ -34,16 +34,16 @@ Don't forget to fill in the version where "VERSIONHERE" is present.
 ### Gradle
 
 ```gradle
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
 ```
 ```gradle
-	dependencies {
-		implementation 'com.github.StijnSimons:LWSL:VERSIONHERE'
-	}
+dependencies {
+	implementation 'com.github.StijnSimons:LWSL:VERSIONHERE'
+}
 ```
 Don't forget to fill in the version where "VERSIONHERE" is present.
