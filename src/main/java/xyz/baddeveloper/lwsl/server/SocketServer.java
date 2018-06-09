@@ -2,6 +2,7 @@ package xyz.baddeveloper.lwsl.server;
 
 import xyz.baddeveloper.lwsl.server.events.OnConnectEvent;
 import xyz.baddeveloper.lwsl.server.events.OnDisconnectEvent;
+import xyz.baddeveloper.lwsl.server.events.OnReadyEvent;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,6 +18,7 @@ public class SocketServer {
 
     private List<OnConnectEvent> connectEvents = new ArrayList<>();
     private List<OnDisconnectEvent> disconnectEvents = new ArrayList<>();
+    private List<OnReadyEvent> readyEvents = new ArrayList<>();
 
     private boolean running = false;
     private ServerSocket serverSocket;
@@ -56,11 +58,22 @@ public class SocketServer {
                 }).start();
             } catch (IOException ignored) {}
         }).start();
+        readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
     }
 
     public void stop(){
         if(serverSocket != null && serverSocket.isClosed())
             try { serverSocket.close(); } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public SocketServer addReadyEvent(OnReadyEvent event){
+        readyEvents.add(event);
+        return this;
+    }
+
+    public SocketServer removeReadyEvent(OnReadyEvent event){
+        readyEvents.remove(event);
+        return this;
     }
 
     public SocketServer addDisconnectEvent(OnDisconnectEvent event){
@@ -100,5 +113,21 @@ public class SocketServer {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public int getMaxconnections() {
+        return maxconnections;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
     }
 }
