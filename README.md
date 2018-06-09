@@ -1,4 +1,4 @@
-### Light Weight Socket Library
+# Light Weight Socket Library
 LWSL is an open source socket library made in Java.  
 Everyone can contribute by making pull requests.  
 If you have any issues / new features, present them in the issues tab.
@@ -31,7 +31,7 @@ Don't forget to fill in the version where "VERSIONHERE" is present.
 
 ### Gradle
 
-```gradle
+``gradle
 	allprojects {
 		repositories {
 			...
