@@ -17,7 +17,7 @@ public class Controller {
         socketServer.getClients().forEach(socketHandler -> socketHandler.sendPacket(packet));
     }
 
-    public void kickAll() throws IOException {
+    public void kickAll() {
         socketServer.getClients().forEach(this::kickClient);
     }
 
