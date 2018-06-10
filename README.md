@@ -51,7 +51,7 @@ socketClient.sendPacket(new LoginPacket("Baddeveloper", "password123"));
 ```
 Or for the client server side:
 ```java
-socketHandler.sendPacket(new LoginPacket("Baddeveloper", "password123")));
+socketHandler.sendPacket(new LoginPacket("Baddeveloper", "password123"));
 ```
 You can handle these packets by making an "OnPacketReceived" event.
 ```java
