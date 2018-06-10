@@ -49,7 +49,7 @@ public class SocketServer {
 
     private void listen(){
         new Thread(() -> {
-            while(!serverSocket.isClosed() && serverSocket.isBound()) try {
+            while(running) try {
                 Socket socket = serverSocket.accept();
                 connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
                 new SocketHandler(this, socket).handle();
