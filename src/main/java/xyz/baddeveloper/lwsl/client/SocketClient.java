@@ -2,12 +2,13 @@ package xyz.baddeveloper.lwsl.client;
 
 import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class SocketClient {
 
@@ -16,10 +17,13 @@ public class SocketClient {
     private int timeout;
     private boolean keepalive;
 
-    private List<OnConnectEvent> connectEventList = new ArrayList<>();;
+    private List<OnConnectEvent> connectEventList = new ArrayList<>();
 
     private boolean connected = false;
     private Socket socket;
+
+    private DataInputStream dis;
+    private DataOutputStream dos;
 
     public SocketClient(String address, int port) {
         this.address = address;
@@ -33,6 +37,9 @@ public class SocketClient {
             socket.setKeepAlive(keepalive);
             socket.setSoTimeout(timeout);
 
+            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream());
+
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -44,24 +51,22 @@ public class SocketClient {
 
     public void shutdown(){
         try{
-            if(socket != null && !socket.isClosed()) socket.close();
+            if(socket != null) socket.close();
             connected = false;
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        }catch (IOException ignored){}
     }
 
     private void listen(){
-        new Thread(() -> {
-            while(!socket.isClosed() && socket.isConnected()){
+        Executors.newSingleThreadExecutor().execute(() -> {
+            while(!socket.isClosed()){
                 try {
-                    
+
                 } catch (Exception e) {
                     shutdown();
                     break;
                 }
             }
-        }).start();
+        });
     }
 
     private SocketClient setAddress(String address){
@@ -83,6 +88,5 @@ public class SocketClient {
         this.keepalive = keepalive;
         return this;
     }
-
 
 }

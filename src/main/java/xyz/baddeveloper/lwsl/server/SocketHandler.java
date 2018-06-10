@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.Executors;
 
 public class SocketHandler {
 
@@ -25,14 +26,17 @@ public class SocketHandler {
     }
 
     public void handle(){
-        if (!socket.isClosed()) {
-            new Thread(() -> {
-                while (!socket.isClosed() && socket.isConnected()) {
-
+        Executors.newSingleThreadExecutor().execute(() -> {
+            while(!socket.isClosed()) {
+                try {
+                    String test = dis.readUTF();
+                    System.out.println(test);
+                } catch (Exception e) {
+                    try {socket.close();} catch (IOException ignored) {}
+                    socketServer.getDisconnectEvents().forEach(onDisconnectEvent -> onDisconnectEvent.onDisconnect(socket));
+                    break;
                 }
-            }).start();
-
-            // Make disconnect thread
-        }
+            }
+        });
     }
 }

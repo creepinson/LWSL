@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class SocketServer {
 
@@ -43,24 +44,26 @@ public class SocketServer {
             e.printStackTrace();
         }
         running = serverSocket != null;
-        if(!running) return;
         listen();
     }
 
     private void listen(){
-        new Thread(() -> {
+        if(!running)
+            return;
+
+        Executors.newSingleThreadExecutor().execute(() -> {
             while(running) try {
                 Socket socket = serverSocket.accept();
                 connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
                 new SocketHandler(this, socket).handle();
             } catch (IOException ignored) {}
-        }).start();
+        });
         readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
     }
 
     public void stop(){
         if(serverSocket != null)
-            try { serverSocket.close(); } catch (IOException e) { e.printStackTrace(); }
+            try { serverSocket.close(); } catch (IOException ignored) {}
     }
 
     public SocketServer addReadyEvent(OnReadyEvent event){
