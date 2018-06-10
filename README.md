@@ -22,7 +22,7 @@ socketServer = new SocketServer(25566)
 socketServer.start();
 ```
 
-## Client
+### Client
 As for the client side, look at the following example.  
 ```java
 SocketClient socketclient = new SocketClient("localhost", 25566)
@@ -33,7 +33,7 @@ SocketClient socketclient = new SocketClient("localhost", 25566)
 socketclient.connect();
 ```
 
-## Packets
+### Packets
 Both the SocketClient and SocketServer can send packets by using the #sendPacket(Packet) method.  
 To make a custom packet, look at the example below.
 ```java
@@ -62,7 +62,23 @@ You can handle these packets by making an "OnPacketReceived" event.
     	System.out.println("Logged in!");
 })
 ```
+### Controller
 
+The controller can be used to kick all clients, kick a specific client, get a client by its IP, send packets to all connected clients, ...  
+To get the controller's instance, use the following method.
+```java
+socketServer.getController();
+```
+
+Here are a couple examples of the controller's usage.
+```java
+final Controller controller = socketServer.getController();
+        
+controller.kickClient(controller.getClientByIP("127.0.0.1"));
+        
+controller.sendPacketToAll(new MessagePacket("Shutting down server!"));
+controller.kickAll();
+```
 
 ## Installation
 If your project is using Maven or Gradle, check the tutorials below.
