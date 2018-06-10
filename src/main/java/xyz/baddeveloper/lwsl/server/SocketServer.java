@@ -28,7 +28,7 @@ public class SocketServer {
 
     public SocketServer() {
         this.port = 8080;
-        this.maxconnections = 1000;
+        this.maxconnections = 100;
         this.timeout = 0;
     }
 
@@ -56,6 +56,8 @@ public class SocketServer {
         Executors.newSingleThreadExecutor().execute(() -> {
             while(running) try {
                 Socket socket = serverSocket.accept();
+                if(maxconnections != 0 && clients.size()>=maxconnections)
+                    socket.close();
                 connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
                 SocketHandler socketHandler = new SocketHandler(this, socket);
                 clients.add(socketHandler);
