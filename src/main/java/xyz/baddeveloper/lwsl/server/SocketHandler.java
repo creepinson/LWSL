@@ -51,4 +51,16 @@ public class SocketHandler {
             socketServer.getPacketSentEvents().forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
         }catch (IOException ignored){}
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public DataInputStream getDis() {
+        return dis;
+    }
+
+    public DataOutputStream getDos() {
+        return dos;
+    }
 }

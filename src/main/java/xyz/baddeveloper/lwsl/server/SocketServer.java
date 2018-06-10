@@ -24,6 +24,7 @@ public class SocketServer {
     private List<SocketHandler> clients = new ArrayList<>();
 
     private boolean running = false;
+    private Controller controller;
     private ServerSocket serverSocket;
 
     public SocketServer() {
@@ -52,6 +53,7 @@ public class SocketServer {
     private void listen(){
         if(!running)
             return;
+        controller = new Controller(this);
 
         Executors.newSingleThreadExecutor().execute(() -> {
             while(running) try {
@@ -179,5 +181,9 @@ public class SocketServer {
 
     public List<SocketHandler> getClients() {
         return clients;
+    }
+
+    public Controller getController() {
+        return controller;
     }
 }
