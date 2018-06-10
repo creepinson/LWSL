@@ -59,7 +59,7 @@ public class SocketServer {
     }
 
     public void stop(){
-        if(serverSocket != null && serverSocket.isClosed())
+        if(serverSocket != null)
             try { serverSocket.close(); } catch (IOException e) { e.printStackTrace(); }
     }
 
