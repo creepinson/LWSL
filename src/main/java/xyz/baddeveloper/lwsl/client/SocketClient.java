@@ -1,6 +1,11 @@
 package xyz.baddeveloper.lwsl.client;
 
+import org.json.JSONObject;
 import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
+import xyz.baddeveloper.lwsl.client.events.OnDisconnectEvent;
+import xyz.baddeveloper.lwsl.client.events.OnPacketReceivedEvent;
+import xyz.baddeveloper.lwsl.client.events.OnPacketSentEvent;
+import xyz.baddeveloper.lwsl.packet.Packet;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,7 +22,10 @@ public class SocketClient {
     private int timeout;
     private boolean keepalive;
 
-    private List<OnConnectEvent> connectEventList = new ArrayList<>();
+    private List<OnConnectEvent> connectEvents = new ArrayList<>();
+    private List<OnDisconnectEvent> disconnectEvents = new ArrayList<>();
+    private List<OnPacketReceivedEvent> packetReceivedEvents = new ArrayList<>();
+    private List<OnPacketSentEvent> packetSentEvents = new ArrayList<>();
 
     private boolean connected = false;
     private Socket socket;
@@ -45,7 +53,7 @@ public class SocketClient {
         }
         connected = socket != null;
         if(!connected) return;
-        connectEventList.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
+        connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
         listen();
     }
 
@@ -58,15 +66,25 @@ public class SocketClient {
 
     private void listen(){
         Executors.newSingleThreadExecutor().execute(() -> {
-            while(!socket.isClosed()){
+            while(!socket.isClosed()) {
                 try {
-
+                    Packet in = new Packet(new JSONObject(dis.readUTF()));
+                    packetReceivedEvents.forEach(onPacketReceivedEvent -> onPacketReceivedEvent.onPacketReceived(this, in));
                 } catch (Exception e) {
-                    shutdown();
+                    try {socket.close();} catch (IOException ignored) {}
+                    disconnectEvents.forEach(onDisconnectEvent -> onDisconnectEvent.onDisconnect(socket));
                     break;
                 }
             }
         });
+    }
+
+    public void sendPacket(Packet packet){
+        try{
+            dos.writeUTF(packet.toString());
+            dos.flush();
+            packetSentEvents.forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
+        }catch (IOException ignored){}
     }
 
     private SocketClient setAddress(String address){
@@ -89,4 +107,59 @@ public class SocketClient {
         return this;
     }
 
+    public SocketClient addConnectEvent(OnConnectEvent event){
+        connectEvents.add(event);
+        return this;
+    }
+
+    public SocketClient removeConnectEvent(OnConnectEvent event){
+        connectEvents.remove(event);
+        return this;
+    }
+
+    public SocketClient addDisconnectEvent(OnDisconnectEvent event){
+        disconnectEvents.add(event);
+        return this;
+    }
+
+    public SocketClient removeDisconnectEvent(OnDisconnectEvent event){
+        disconnectEvents.remove(event);
+        return this;
+    }
+
+    public SocketClient addPacketReceivedEvent(OnPacketReceivedEvent event){
+        packetReceivedEvents.add(event);
+        return this;
+    }
+
+    public SocketClient removePacketReceivedEvent(OnPacketReceivedEvent event){
+        packetReceivedEvents.remove(event);
+        return this;
+    }
+
+    public SocketClient addPacketSentEvent(OnPacketSentEvent event){
+        packetSentEvents.add(event);
+        return this;
+    }
+
+    public SocketClient removePacketSentEvent(OnPacketSentEvent event){
+        packetSentEvents.remove(event);
+        return this;
+    }
+
+    public List<OnConnectEvent> getConnectEvents() {
+        return connectEvents;
+    }
+
+    public List<OnDisconnectEvent> getDisconnectEvents() {
+        return disconnectEvents;
+    }
+
+    public List<OnPacketReceivedEvent> getPacketReceivedEvents() {
+        return packetReceivedEvents;
+    }
+
+    public List<OnPacketSentEvent> getPacketSentEvents() {
+        return packetSentEvents;
+    }
 }

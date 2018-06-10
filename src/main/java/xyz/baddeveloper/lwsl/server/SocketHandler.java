@@ -1,5 +1,8 @@
 package xyz.baddeveloper.lwsl.server;
 
+import org.json.JSONObject;
+import xyz.baddeveloper.lwsl.packet.Packet;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,7 +17,7 @@ public class SocketHandler {
     private DataInputStream dis;
     private DataOutputStream dos;
 
-    public SocketHandler(SocketServer socketServer, Socket socket) {
+    SocketHandler(SocketServer socketServer, Socket socket) {
         this.socketServer = socketServer;
         this.socket = socket;
 
@@ -25,18 +28,27 @@ public class SocketHandler {
 
     }
 
-    public void handle(){
+    void handle(){
         Executors.newSingleThreadExecutor().execute(() -> {
             while(!socket.isClosed()) {
                 try {
-                    String test = dis.readUTF();
-                    System.out.println(test);
+                    Packet in = new Packet(new JSONObject(dis.readUTF()));
+                    socketServer.getPacketReceivedEvents().forEach(onPacketReceivedEvent -> onPacketReceivedEvent.onPacketReceived(this, in));
                 } catch (Exception e) {
                     try {socket.close();} catch (IOException ignored) {}
                     socketServer.getDisconnectEvents().forEach(onDisconnectEvent -> onDisconnectEvent.onDisconnect(socket));
+                    socketServer.getClients().remove(this);
                     break;
                 }
             }
         });
+    }
+
+    public void sendPacket(Packet packet){
+        try{
+            dos.writeUTF(packet.toString());
+            dos.flush();
+            socketServer.getPacketSentEvents().forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
+        }catch (IOException ignored){}
     }
 }

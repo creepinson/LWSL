@@ -1,8 +1,6 @@
 package xyz.baddeveloper.lwsl.server;
 
-import xyz.baddeveloper.lwsl.server.events.OnConnectEvent;
-import xyz.baddeveloper.lwsl.server.events.OnDisconnectEvent;
-import xyz.baddeveloper.lwsl.server.events.OnReadyEvent;
+import xyz.baddeveloper.lwsl.server.events.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,6 +18,10 @@ public class SocketServer {
     private List<OnConnectEvent> connectEvents = new ArrayList<>();
     private List<OnDisconnectEvent> disconnectEvents = new ArrayList<>();
     private List<OnReadyEvent> readyEvents = new ArrayList<>();
+    private List<OnPacketReceivedEvent> packetReceivedEvents = new ArrayList<>();
+    private List<OnPacketSentEvent> packetSentEvents = new ArrayList<>();
+
+    private List<SocketHandler> clients = new ArrayList<>();
 
     private boolean running = false;
     private ServerSocket serverSocket;
@@ -55,7 +57,9 @@ public class SocketServer {
             while(running) try {
                 Socket socket = serverSocket.accept();
                 connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
-                new SocketHandler(this, socket).handle();
+                SocketHandler socketHandler = new SocketHandler(this, socket);
+                clients.add(socketHandler);
+                socketHandler.handle();
             } catch (IOException ignored) {}
         });
         readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
@@ -64,6 +68,26 @@ public class SocketServer {
     public void stop(){
         if(serverSocket != null)
             try { serverSocket.close(); } catch (IOException ignored) {}
+    }
+
+    public SocketServer addPacketReceivedEvent(OnPacketReceivedEvent event){
+        packetReceivedEvents.add(event);
+        return this;
+    }
+
+    public SocketServer removePacketReceivedEvent(OnPacketReceivedEvent event){
+        packetReceivedEvents.remove(event);
+        return this;
+    }
+
+    public SocketServer addPacketSentEvent(OnPacketSentEvent event){
+        packetSentEvents.add(event);
+        return this;
+    }
+
+    public SocketServer removePacketSentEvent(OnPacketSentEvent event){
+        packetSentEvents.remove(event);
+        return this;
     }
 
     public SocketServer addReadyEvent(OnReadyEvent event){
@@ -141,5 +165,17 @@ public class SocketServer {
 
     public List<OnReadyEvent> getReadyEvents() {
         return readyEvents;
+    }
+
+    public List<OnPacketReceivedEvent> getPacketReceivedEvents() {
+        return packetReceivedEvents;
+    }
+
+    public List<OnPacketSentEvent> getPacketSentEvents() {
+        return packetSentEvents;
+    }
+
+    public List<SocketHandler> getClients() {
+        return clients;
     }
 }
