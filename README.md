@@ -1,5 +1,7 @@
 # Light Weight Socket Library  
-[![CircleCI](https://circleci.com/gh/StijnSimons/LWSL/tree/master.svg?style=svg)](https://circleci.com/gh/StijnSimons/LWSL/tree/master)  
+[![CircleCI](https://circleci.com/gh/StijnSimons/LWSL/tree/master.svg?style=svg)](https://circleci.com/gh/StijnSimons/LWSL/tree/master) 
+[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)
+  
 
 LWSL is an open source socket library made in Java using JSON packets.  
 It is used to create small backend applications such as verification servers, rats or other simple tasks.  
@@ -100,7 +102,9 @@ If your project is using Maven or Gradle, check the tutorials below.
 	<version>VERSIONHERE</version>
 </dependency>
 ```
-Don't forget to fill in the version where "VERSIONHERE" is present.
+Don't forget to fill in the version where "VERSIONHERE" is present.  
+Latest version:  
+[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)  
 
 ### Gradle
 
@@ -117,4 +121,6 @@ dependencies {
 	implementation 'com.github.StijnSimons:LWSL:VERSIONHERE'
 }
 ```
-Don't forget to fill in the version where "VERSIONHERE" is present.
+Don't forget to fill in the version where "VERSIONHERE" is present.  
+Latest version:  
+[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)  
