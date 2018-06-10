@@ -6,7 +6,9 @@ public class Packet {
 
     private JSONObject object;
 
-    public Packet(){}
+    public Packet(){
+        object = new JSONObject();
+    }
 
     public Packet(JSONObject object) { this.object = object; }
 

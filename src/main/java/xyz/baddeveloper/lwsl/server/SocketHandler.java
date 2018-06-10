@@ -46,7 +46,7 @@ public class SocketHandler {
 
     public void sendPacket(Packet packet){
         try{
-            dos.writeUTF(packet.toString());
+            dos.writeUTF(packet.getObject().toString());
             dos.flush();
             socketServer.getPacketSentEvents().forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
         }catch (IOException ignored){}

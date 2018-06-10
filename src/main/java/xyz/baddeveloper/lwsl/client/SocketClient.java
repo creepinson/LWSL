@@ -81,7 +81,7 @@ public class SocketClient {
 
     public void sendPacket(Packet packet){
         try{
-            dos.writeUTF(packet.toString());
+            dos.writeUTF(packet.getObject().toString());
             dos.flush();
             packetSentEvents.forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
         }catch (IOException ignored){}
