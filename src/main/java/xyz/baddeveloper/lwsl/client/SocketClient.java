@@ -87,22 +87,22 @@ public class SocketClient {
         }catch (IOException ignored){}
     }
 
-    private SocketClient setAddress(String address){
+    public SocketClient setAddress(String address){
         this.address = address;
         return this;
     }
 
-    private SocketClient setPort(int port){
+    public SocketClient setPort(int port){
         this.port = port;
         return this;
     }
 
-    private SocketClient setTimeout(int timeout){
+    public SocketClient setTimeout(int timeout){
         this.timeout = timeout;
         return this;
     }
 
-    private SocketClient setKeepAlive(boolean keepalive){
+    public SocketClient setKeepAlive(boolean keepalive){
         this.keepalive = keepalive;
         return this;
     }
@@ -145,6 +145,30 @@ public class SocketClient {
     public SocketClient removePacketSentEvent(OnPacketSentEvent event){
         packetSentEvents.remove(event);
         return this;
+    }
+
+    public boolean isKeepalive() {
+        return keepalive;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public int getTimeout() {
+        return timeout;
     }
 
     public List<OnConnectEvent> getConnectEvents() {

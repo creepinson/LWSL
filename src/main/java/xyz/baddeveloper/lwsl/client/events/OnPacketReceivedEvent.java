@@ -7,5 +7,4 @@ import xyz.baddeveloper.lwsl.server.SocketHandler;
 public interface OnPacketReceivedEvent {
 
     void onPacketReceived(SocketClient socket, Packet packet);
-
 }
