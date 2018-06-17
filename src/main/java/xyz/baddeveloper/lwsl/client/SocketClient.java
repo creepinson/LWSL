@@ -5,6 +5,7 @@ import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnDisconnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnPacketReceivedEvent;
 import xyz.baddeveloper.lwsl.client.events.OnPacketSentEvent;
+import xyz.baddeveloper.lwsl.client.exceptions.ConnectException;
 import xyz.baddeveloper.lwsl.packet.Packet;
 
 import java.io.DataInputStream;
@@ -38,7 +39,7 @@ public class SocketClient {
         this.port = port;
     }
 
-    public void connect(){
+    public void connect() throws ConnectException{
         try {
             socket = new Socket(address, port);
 
@@ -48,8 +49,8 @@ public class SocketClient {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
 
-        }catch (IOException e){
-            e.printStackTrace();
+        }catch (Exception e){
+            throw new ConnectException(e);
         }
         connected = socket != null;
         if(!connected) return;
