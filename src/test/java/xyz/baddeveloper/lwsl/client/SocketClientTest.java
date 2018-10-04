@@ -17,22 +17,25 @@ public class SocketClientTest {
 
     @Test
     public void testSocketClient() throws Exception {
-        System.out.println("--- Start LWSL Tests ---");
+        System.out.println("--- Begin LWSL Tests ---");
         final List<Packet> receivedPackets = new ArrayList<>();
         final SocketServer socketServer = new SocketServer(25566)
                 .setMaxConnections(0)
                 .addPacketReceivedEvent((socket, packet) -> receivedPackets.add(packet));
+        System.out.println("--- Begin LWSL Test [Socket Server] ---");
         socketServer.start();
 
         assertTrue(socketServer.getClients().isEmpty());
         assertTrue(receivedPackets.isEmpty());
 
+        System.out.println("--- Begin LWSL Test [Socket Client] ---");
         final SocketClient socketClient = new SocketClient("localhost", 25566);
         socketClient.connect();
 
         assertEquals(1, socketServer.getClients().size());
         assertTrue(receivedPackets.isEmpty());
 
+        System.out.println("--- Begin LWSL Test [Socket Packets] ---");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Key", "Value");
 
@@ -42,10 +45,13 @@ public class SocketClientTest {
 
         socketClient.sendPacket(new Packet());
         awaitPacketOrFail(receivedPackets, 2, 1000);
+        System.out.println("--- End LWSL Test [Socket Packets] ---");
 
         socketClient.shutdown();
+        System.out.println("--- End LWSL Test [Socket Client] ---");
         socketServer.stop();
-        System.out.println("--- Stop LWSL Tests ---");
+        System.out.println("--- End LWSL Test [Socket Server] ---");
+        System.out.println("--- End LWSL Tests ---");
     }
 
     private void awaitPacketOrFail(List<Packet> receivedPackets, int expectedSize, int timeout) throws InterruptedException {
