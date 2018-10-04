@@ -126,3 +126,7 @@ dependencies {
 Don't forget to fill in the version where "VERSIONHERE" is present.  
 Latest version:  
 [![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)  
+
+## Contributors
+- [Baddeveloper (Stijn Simons)](https://github.com/StijnSimons)
+- [arankin-irl (Alex Rankin)](https://github.com/arankin-irl)
