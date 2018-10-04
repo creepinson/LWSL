@@ -13,6 +13,9 @@ For a faster support, feel free to join my discord [here](https://discordapp.com
 
 ## Usage
 
+### Example chat application
+You can take a look at the example on [this repository (LWSLChatExample)](https://github.com/StijnSimons/LWSLChatExample).
+
 ### Server
 To create a server using LWSL, take a look at the example below.  
 ```java
