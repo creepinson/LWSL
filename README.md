@@ -49,7 +49,7 @@ public class LoginPacket extends Packet {
     }
 }
 ```
-That's it! It send it to the server, use the following method.
+That's it! To send it to the server, use the following method.
 ```java
 socketClient.sendPacket(new LoginPacket("Baddeveloper", "password123"));
 ```
