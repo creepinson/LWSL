@@ -17,6 +17,7 @@ public class SocketClientTest {
 
     @Test
     public void testSocketClient() throws Exception {
+        System.out.println("--- Start LWSL Tests ---");
         final List<Packet> receivedPackets = new ArrayList<>();
         final SocketServer socketServer = new SocketServer(25566)
                 .setMaxConnections(0)
@@ -44,6 +45,7 @@ public class SocketClientTest {
 
         socketClient.shutdown();
         socketServer.stop();
+        System.out.println("--- Stop LWSL Tests ---");
     }
 
     private void awaitPacketOrFail(List<Packet> receivedPackets, int expectedSize, int timeout) throws InterruptedException {
