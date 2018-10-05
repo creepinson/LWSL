@@ -96,7 +96,7 @@ SocketServer socketServer = new SocketServer(25566, SSLContext.getDefault());
 socketServer.start();
 ```
 
-```
+```java
 SocketClient socketclient = new SocketClient("localhost", 25566, SSLContext.getDefault())
 socketclient.connect();
 ```
