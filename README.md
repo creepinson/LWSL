@@ -91,7 +91,7 @@ controller.kickAll();
 
 You can create an encrypted socket connection by passing an `SSLContext` object to the `SocketClient` and `SocketServer` constructors:
 
-```
+```java
 SocketServer socketServer = new SocketServer(25566, SSLContext.getDefault());
 socketServer.start();
 ```
