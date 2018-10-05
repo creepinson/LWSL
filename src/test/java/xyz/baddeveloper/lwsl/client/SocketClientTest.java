@@ -32,18 +32,15 @@ public class SocketClientTest {
 
     @Test
     public void testSocketClient() throws Exception {
-        System.out.println("--- Begin LWSL Tests ---");
         final List<Packet> receivedPackets = new ArrayList<>();
         final SocketServer socketServer = new SocketServer(25566)
                 .setMaxConnections(0)
                 .addPacketReceivedEvent((socket, packet) -> receivedPackets.add(packet));
-        System.out.println("--- Begin LWSL Test [Socket Server] ---");
         socketServer.start();
 
         assertTrue(socketServer.getClients().isEmpty());
         assertTrue(receivedPackets.isEmpty());
 
-        System.out.println("--- Begin LWSL Test [Socket Client] ---");
         final SocketClient socketClient = new SocketClient("localhost", 25566);
         socketClient.connect();
 
@@ -51,7 +48,6 @@ public class SocketClientTest {
         awaitOrFail(socketServer.getClients(), 1, 1000);
         assertTrue(receivedPackets.isEmpty());
 
-        System.out.println("--- Begin LWSL Test [Socket Packets] ---");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Key", "Value");
 
@@ -61,13 +57,9 @@ public class SocketClientTest {
 
         socketClient.sendPacket(new Packet());
         awaitOrFail(receivedPackets, 2, 1000);
-        System.out.println("--- End LWSL Test [Socket Packets] ---");
 
         socketClient.shutdown();
-        System.out.println("--- End LWSL Test [Socket Client] ---");
         socketServer.stop();
-        System.out.println("--- End LWSL Test [Socket Server] ---");
-        System.out.println("--- End LWSL Tests ---");
     }
 
     @Test
