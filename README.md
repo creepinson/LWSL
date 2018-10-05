@@ -87,6 +87,20 @@ controller.sendPacketToAll(new MessagePacket("Shutting down server!"));
 controller.kickAll();
 ```
 
+### SSL/TLS
+
+You can create an encrypted socket connection by passing an `SSLContext` object to the `SocketClient` and `SocketServer` constructors:
+
+```
+SocketServer socketServer = new SocketServer(25566, SSLContext.getDefault());
+socketServer.start();
+```
+
+```
+SocketClient socketclient = new SocketClient("localhost", 25566, SSLContext.getDefault())
+socketclient.connect();
+```
+
 ## Installation
 If your project is using Maven or Gradle, check the tutorials below.
 

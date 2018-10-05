@@ -2,6 +2,7 @@ package xyz.baddeveloper.lwsl.server;
 
 import xyz.baddeveloper.lwsl.server.events.*;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class SocketServer {
+
+    private static final int DEFAULT_PORT = 8080;
 
     private int port;
     private int maxconnections;
@@ -26,22 +29,34 @@ public class SocketServer {
     private boolean running = false;
     private Controller controller;
     private ServerSocket serverSocket;
+    private final SSLContext sslContext;
 
     public SocketServer() {
-        this.port = 8080;
-        this.maxconnections = 100;
-        this.timeout = 0;
+        this(DEFAULT_PORT);
+    }
+
+    public SocketServer(SSLContext sslContext) {
+        this(DEFAULT_PORT, sslContext);
     }
 
     public SocketServer(int port) {
+        this(port, null);
+    }
+
+    public SocketServer(int port, SSLContext sslContext) {
         this.port = port;
         this.maxconnections = 1000;
         this.timeout = 0;
+        this.sslContext = sslContext;
     }
 
     public void start(){
         try {
-            serverSocket = new ServerSocket(port);
+            if (sslContext != null) {
+                serverSocket = sslContext.getServerSocketFactory().createServerSocket(port);
+            } else {
+                serverSocket = new ServerSocket(port);
+            }
             serverSocket.setSoTimeout(timeout);
         } catch (IOException e) {
             e.printStackTrace();

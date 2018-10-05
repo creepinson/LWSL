@@ -1,6 +1,8 @@
 package xyz.baddeveloper.lwsl.client;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnDisconnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnPacketReceivedEvent;
@@ -8,6 +10,7 @@ import xyz.baddeveloper.lwsl.client.events.OnPacketSentEvent;
 import xyz.baddeveloper.lwsl.client.exceptions.ConnectException;
 import xyz.baddeveloper.lwsl.packet.Packet;
 
+import javax.net.ssl.SSLContext;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,6 +20,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class SocketClient {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocketClient.class);
 
     private String address;
     private int port;
@@ -30,18 +35,28 @@ public class SocketClient {
 
     private boolean connected = false;
     private Socket socket;
+    private final SSLContext sslContext;
 
     private DataInputStream dis;
     private DataOutputStream dos;
 
     public SocketClient(String address, int port) {
+        this(address, port, null);
+    }
+
+    public SocketClient(String address, int port, SSLContext sslContext) {
         this.address = address;
         this.port = port;
+        this.sslContext = sslContext;
     }
 
     public void connect() throws ConnectException{
         try {
-            socket = new Socket(address, port);
+            if (sslContext != null) {
+                socket = sslContext.getSocketFactory().createSocket(address, port);
+            } else {
+                socket = new Socket(address, port);
+            }
 
             socket.setKeepAlive(keepalive);
             socket.setSoTimeout(timeout);
@@ -72,7 +87,9 @@ public class SocketClient {
                     Packet in = new Packet(new JSONObject(dis.readUTF()));
                     packetReceivedEvents.forEach(onPacketReceivedEvent -> onPacketReceivedEvent.onPacketReceived(this, in));
                 } catch (Exception e) {
-                    try {socket.close();} catch (IOException ignored) {}
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {}
                     disconnectEvents.forEach(onDisconnectEvent -> onDisconnectEvent.onDisconnect(socket));
                     break;
                 }
@@ -85,7 +102,9 @@ public class SocketClient {
             dos.writeUTF(packet.getObject().toString());
             dos.flush();
             packetSentEvents.forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
-        }catch (IOException ignored){}
+        } catch (IOException e) {
+            LOGGER.error("Failed to send packet.", e);
+        }
     }
 
     public SocketClient setAddress(String address){
