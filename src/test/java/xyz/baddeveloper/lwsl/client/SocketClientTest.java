@@ -22,33 +22,36 @@ import static org.junit.Assert.fail;
 
 public class SocketClientTest {
 
-	private SSLContext sslContext;
+    private SSLContext sslContext;
 
-	@Before
-	public void setUp() throws Exception {
-		sslContext = constructSslContext();
-	}
+    @Before
+    public void setUp() throws Exception {
+        sslContext = constructSslContext();
+    }
+
 
     @Test
     public void testSocketClient() throws Exception {
+        System.out.println("--- Begin LWSL Tests ---");
         final List<Packet> receivedPackets = new ArrayList<>();
         final SocketServer socketServer = new SocketServer(25566)
                 .setMaxConnections(0)
                 .addPacketReceivedEvent((socket, packet) -> receivedPackets.add(packet));
+        System.out.println("--- Begin LWSL Test [Socket Server] ---");
         socketServer.start();
 
         assertTrue(socketServer.getClients().isEmpty());
         assertTrue(receivedPackets.isEmpty());
 
+        System.out.println("--- Begin LWSL Test [Socket Client] ---");
         final SocketClient socketClient = new SocketClient("localhost", 25566);
         socketClient.connect();
+
         assertTrue(socketClient.isConnected());
-
-        Thread.sleep(100);
-
         awaitOrFail(socketServer.getClients(), 1, 1000);
         assertTrue(receivedPackets.isEmpty());
 
+        System.out.println("--- Begin LWSL Test [Socket Packets] ---");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Key", "Value");
 
@@ -58,9 +61,13 @@ public class SocketClientTest {
 
         socketClient.sendPacket(new Packet());
         awaitOrFail(receivedPackets, 2, 1000);
+        System.out.println("--- End LWSL Test [Socket Packets] ---");
 
         socketClient.shutdown();
+        System.out.println("--- End LWSL Test [Socket Client] ---");
         socketServer.stop();
+        System.out.println("--- End LWSL Test [Socket Server] ---");
+        System.out.println("--- End LWSL Tests ---");
     }
 
     @Test
@@ -95,7 +102,7 @@ public class SocketClientTest {
         socketServer.stop();
     }
 
-	private void awaitOrFail(List list, int expectedSize, int timeout) throws InterruptedException {
+    private void awaitOrFail(List list, int expectedSize, int timeout) throws InterruptedException {
         // Packets can take a few ms to arrive, and so be counted. We wait until we reach the expected size, or hit the timeout
         final long startTime = System.currentTimeMillis();
         while ((System.currentTimeMillis() < startTime + timeout) && (list.size() != expectedSize)) {
@@ -111,14 +118,14 @@ public class SocketClientTest {
         socketClient.connect();
     }
 
-	private SSLContext constructSslContext() throws Exception {
-	    // TODO : Provide a utility class for constructing SSLContext objects from parameters
-		final SSLContext sslContext = SSLContext.getInstance("TLS");
-		final KeyManager[] keyManagers = getKeyManagers();
-		final TrustManager[] trustManagers = getTrustManagers();
-		sslContext.init(keyManagers, trustManagers, null);
+    private SSLContext constructSslContext() throws Exception {
+        // TODO : Provide a utility class for constructing SSLContext objects from parameters
+        final SSLContext sslContext = SSLContext.getInstance("TLS");
+        final KeyManager[] keyManagers = getKeyManagers();
+        final TrustManager[] trustManagers = getTrustManagers();
+        sslContext.init(keyManagers, trustManagers, null);
         return sslContext;
-	}
+    }
 
     private KeyManager[] getKeyManagers() throws Exception {
         final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -134,7 +141,6 @@ public class SocketClientTest {
         final TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(trustStore);
         return tmf.getTrustManagers();
-
     }
 
 }
