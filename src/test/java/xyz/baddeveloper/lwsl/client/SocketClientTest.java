@@ -73,7 +73,8 @@ public class SocketClientTest {
         assertTrue(socketServer.getClients().isEmpty());
         assertTrue(receivedPackets.isEmpty());
 
-        final SocketClient socketClient = new SocketClient("localhost", 25568, sslContext);
+        final SocketClient socketClient = new SocketClient("localhost", 25568, sslContext)
+                .addPacketReceivedEvent(((socket, packet) -> receivedPackets.add(packet)));
         socketClient.connect();
         assertTrue(socketClient.isConnected());
 
@@ -87,7 +88,7 @@ public class SocketClientTest {
         awaitOrFail(receivedPackets, 1, 5000);
         assertEquals("Value", receivedPackets.get(0).getObject().get("Key"));
 
-        socketClient.sendPacket(new Packet());
+        socketServer.getClients().get(0).sendPacket(new Packet());
         awaitOrFail(receivedPackets, 2, 5000);
 
         socketClient.shutdown();
