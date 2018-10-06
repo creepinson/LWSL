@@ -101,6 +101,24 @@ SocketClient socketclient = new SocketClient("localhost", 25566, SSLContext.getD
 socketclient.connect();
 ```
 
+To create an SSLContext, you can use the `SSLContextUtility` in conjunction with the `SSLContextConfig`. 
+
+The `SSLContextConfig` contains several defaults, so for a standard `.jks` file, you only need to fill in the location (classpath or filesystem) and password. 
+
+These defaults can be overwritten for different types of keystore/truststore, such as PKCS11.
+
+Below is an example of using the `SSLContextUtility` to construct an `SSLContext` from an `SSLContextConfig`:
+
+```java
+final SSLContextConfig config = SSLContextConfig.builder()
+        .keystoreLocation("keystore.jks") // This is on the classpath
+        .keystorePassword("changeit")
+        .truststoreLocation("/usr/local/truststore.jks") // This is on the filesystem
+        .truststorePassword("changeit")
+        .build();
+final SSLContext sslContext = SSLContextUtility.getInstance().getSslContext(config);
+```
+
 ## Installation
 If your project is using Maven or Gradle, check the tutorials below.
 
