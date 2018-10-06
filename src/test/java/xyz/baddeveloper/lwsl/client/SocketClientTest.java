@@ -6,13 +6,10 @@ import org.junit.Test;
 import xyz.baddeveloper.lwsl.client.exceptions.ConnectException;
 import xyz.baddeveloper.lwsl.packet.Packet;
 import xyz.baddeveloper.lwsl.server.SocketServer;
+import xyz.baddeveloper.lwsl.ssl.SSLContextConfig;
+import xyz.baddeveloper.lwsl.ssl.SSLContextUtility;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +22,14 @@ public class SocketClientTest {
     private SSLContext sslContext;
 
     @Before
-    public void setUp() throws Exception {
-        sslContext = constructSslContext();
+    public void setUp() {
+        final SSLContextConfig config = SSLContextConfig.builder()
+                .keystoreLocation("keystore.jks")
+                .keystorePassword("changeit")
+                .truststoreLocation("truststore.jks")
+                .truststorePassword("changeit")
+                .build();
+        sslContext = SSLContextUtility.getInstance().getSslContext(config);
     }
 
 
@@ -109,31 +112,6 @@ public class SocketClientTest {
         final SocketClient socketClient = new SocketClient("localhost", 25567)
                 .addConnectEvent(socket -> fail("Should not have connected"));
         socketClient.connect();
-    }
-
-    private SSLContext constructSslContext() throws Exception {
-        // TODO : Provide a utility class for constructing SSLContext objects from parameters
-        final SSLContext sslContext = SSLContext.getInstance("TLS");
-        final KeyManager[] keyManagers = getKeyManagers();
-        final TrustManager[] trustManagers = getTrustManagers();
-        sslContext.init(keyManagers, trustManagers, null);
-        return sslContext;
-    }
-
-    private KeyManager[] getKeyManagers() throws Exception {
-        final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(this.getClass().getClassLoader().getResourceAsStream("keystore.jks"), "changeit".toCharArray());
-        final KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        kmf.init(keyStore, "changeit".toCharArray());
-        return kmf.getKeyManagers();
-    }
-
-    private TrustManager[] getTrustManagers() throws Exception {
-        final KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        trustStore.load(this.getClass().getClassLoader().getResourceAsStream("truststore.jks"), "changeit".toCharArray());
-        final TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(trustStore);
-        return tmf.getTrustManagers();
     }
 
 }
