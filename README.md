@@ -1,7 +1,6 @@
 # Light Weight Socket Library  
 [![CircleCI](https://circleci.com/gh/StijnSimons/LWSL/tree/master.svg?style=svg)](https://circleci.com/gh/StijnSimons/LWSL/tree/master) 
-[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL) [![Discord](https://img.shields.io/discord/452873518070366219.svg)](https://discord.gg/dmr73XH)
-
+[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)
 
   
 
