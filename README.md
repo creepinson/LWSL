@@ -122,23 +122,25 @@ If your project is using Maven or Gradle, check the tutorials below.
 ### Maven
 
 ```xml
-<repositories>
-	<repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
-</repositories>
+    <repositories>
+        <repository>
+            <id>baddeveloper</id>
+            <name>BadDeveloper's repo</name>
+            <url>https://maven.baddeveloper.xyz/</url>
+        </repository>
+    </repositories>
 ```
+
 ```xml
-<dependency>
-	<groupId>com.github.StijnSimons</groupId>
-	<artifactId>LWSL</artifactId>
-	<version>VERSIONHERE</version>
-</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>xyz.baddeveloper</groupId>
+            <artifactId>LWSL</artifactId>
+            <version>VERSIONHERE</version>
+        </dependency>
+    </dependencies>
 ```
-Don't forget to fill in the version where "VERSIONHERE" is present.  
-Latest version:  
-[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)  
+Don't forget to fill in the version where "VERSIONHERE" is present.
 
 ### Gradle
 
@@ -146,18 +148,16 @@ Latest version:
 allprojects {
 	repositories {
 		...
-		maven { url 'https://jitpack.io' }
+		maven { url 'https://maven.baddeveloper.xyz' }
 	}
 }
 ```
 ```gradle
 dependencies {
-	implementation 'com.github.StijnSimons:LWSL:VERSIONHERE'
+	implementation 'xyz.baddeveloper:LWSL:VERSIONHERE'
 }
 ```
 Don't forget to fill in the version where "VERSIONHERE" is present.  
-Latest version:  
-[![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)  
 
 ## Contributors
 - [Baddeveloper (Stijn Simons)](https://github.com/StijnSimons)
