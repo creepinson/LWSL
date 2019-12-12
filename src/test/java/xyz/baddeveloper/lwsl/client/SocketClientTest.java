@@ -23,13 +23,17 @@ public class SocketClientTest {
 
     @Before
     public void setUp() {
+
         final SSLContextConfig config = SSLContextConfig.builder()
-                .keystoreLocation("keystore.jks")
+                .keystoreLocation("testKeyStore.jks")
                 .keystorePassword("changeit")
-                .truststoreLocation("truststore.jks")
+                .truststoreLocation("testTrustStore.jks")
                 .truststorePassword("changeit")
                 .build();
+
         sslContext = SSLContextUtility.getInstance().getSslContext(config);
+
+        System.setProperty("javax.net.debug", "all");
     }
 
 
