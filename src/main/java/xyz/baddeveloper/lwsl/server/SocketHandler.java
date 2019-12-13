@@ -28,7 +28,7 @@ public class SocketHandler {
 
     }
 
-    void handle(){
+    public void handle(){
         Executors.newSingleThreadExecutor().execute(() -> {
             while(!socket.isClosed()) {
                 try {
