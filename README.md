@@ -1,8 +1,6 @@
 # Light Weight Socket Library  
 [![GitHub release](https://img.shields.io/github/release/StijnSimons/LWSL.svg)](https://github.com/StijnSimons/LWSL)
 
-  
-
 LWSL is an open source socket library made in Java using JSON packets.  
 It is used to create small backend applications such as verification servers, rats or other simple tasks.  
 Everyone can contribute by making pull requests.  
