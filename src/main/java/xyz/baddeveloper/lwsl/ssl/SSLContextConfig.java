@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 import java.security.KeyStore;
+import java.util.Objects;
 
 public class SSLContextConfig {
 
@@ -126,73 +127,27 @@ public class SSLContextConfig {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (this == o) {
-            return true;
-        }
-        if (!(o.getClass().equals(this.getClass()))) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         SSLContextConfig that = (SSLContextConfig) o;
-
-        if (protocol != null ? !protocol.equals(that.protocol) : that.protocol != null) {
-            return false;
-        }
-        if (keyManager != null ? !keyManager.equals(that.keyManager) : that.keyManager != null) {
-            return false;
-        }
-        if (trustManager != null ? !trustManager.equals(that.trustManager) : that.trustManager != null) {
-            return false;
-        }
-        if (keystoreType != null ? !keystoreType.equals(that.keystoreType) : that.keystoreType != null) {
-            return false;
-        }
-        if (keystoreProvider != null ? !keystoreProvider.equals(that.keystoreProvider) : that.keystoreProvider != null) {
-            return false;
-        }
-        if (keystoreLocation != null ? !keystoreLocation.equals(that.keystoreLocation) : that.keystoreLocation != null) {
-            return false;
-        }
-        if (keystorePassword != null ? !keystorePassword.equals(that.keystorePassword) : that.keystorePassword != null) {
-            return false;
-        }
-        if (keystoreServerAlias != null ? !keystoreServerAlias.equals(that.keystoreServerAlias) : that.keystoreServerAlias != null) {
-            return false;
-        }
-        if (keystoreClientAlias != null ? !keystoreClientAlias.equals(that.keystoreClientAlias) : that.keystoreClientAlias != null) {
-            return false;
-        }
-        if (truststoreType != null ? !truststoreType.equals(that.truststoreType) : that.truststoreType != null) {
-            return false;
-        }
-        if (truststoreProvider != null ? !truststoreProvider.equals(that.truststoreProvider) : that.truststoreProvider != null) {
-            return false;
-        }
-        if (truststoreLocation != null ? !truststoreLocation.equals(that.truststoreLocation) : that.truststoreLocation != null) {
-            return false;
-        }
-        return truststorePassword != null ? !truststorePassword.equals(that.truststorePassword) : that.truststorePassword != null;
+        return Objects.equals(protocol, that.protocol) &&
+                Objects.equals(keyManager, that.keyManager) &&
+                Objects.equals(trustManager, that.trustManager) &&
+                Objects.equals(keystoreType, that.keystoreType) &&
+                Objects.equals(keystoreProvider, that.keystoreProvider) &&
+                Objects.equals(keystoreLocation, that.keystoreLocation) &&
+                Objects.equals(keystorePassword, that.keystorePassword) &&
+                Objects.equals(keystoreServerAlias, that.keystoreServerAlias) &&
+                Objects.equals(keystoreClientAlias, that.keystoreClientAlias) &&
+                Objects.equals(truststoreType, that.truststoreType) &&
+                Objects.equals(truststoreProvider, that.truststoreProvider) &&
+                Objects.equals(truststoreLocation, that.truststoreLocation) &&
+                Objects.equals(truststorePassword, that.truststorePassword);
     }
 
     @Override
     public int hashCode() {
-        int result = protocol != null ? protocol.hashCode() : 0;
-        result = 31 * result + (keyManager != null ? keyManager.hashCode() : 0);
-        result = 31 * result + (trustManager != null ? trustManager.hashCode() : 0);
-        result = 31 * result + (keystoreType != null ? keystoreType.hashCode() : 0);
-        result = 31 * result + (keystoreProvider != null ? keystoreProvider.hashCode() : 0);
-        result = 31 * result + (keystoreLocation != null ? keystoreLocation.hashCode() : 0);
-        result = 31 * result + (keystorePassword != null ? keystorePassword.hashCode() : 0);
-        result = 31 * result + (keystoreServerAlias != null ? keystoreServerAlias.hashCode() : 0);
-        result = 31 * result + (keystoreClientAlias != null ? keystoreClientAlias.hashCode() : 0);
-        result = 31 * result + (truststoreType != null ? truststoreType.hashCode() : 0);
-        result = 31 * result + (truststoreProvider != null ? truststoreProvider.hashCode() : 0);
-        result = 31 * result + (truststoreLocation != null ? truststoreLocation.hashCode() : 0);
-        result = 31 * result + (truststorePassword != null ? truststorePassword.hashCode() : 0);
-        return result;
+        return Objects.hash(protocol, keyManager, trustManager, keystoreType, keystoreProvider, keystoreLocation, keystorePassword, keystoreServerAlias, keystoreClientAlias, truststoreType, truststoreProvider, truststoreLocation, truststorePassword);
     }
 
     public static Builder builder() {
