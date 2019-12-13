@@ -116,7 +116,8 @@ final SSLContext sslContext = SSLContextUtility.getInstance().getSslContext(conf
 ```
 
 ## Installation
-If your project is using Maven or Gradle, check the tutorials below.
+If your project is using Maven or Gradle, check the tutorials below.  
+A list of Maven artifacts can be found [here](https://maven.baddeveloper.xyz/).
 
 ### Maven
 
