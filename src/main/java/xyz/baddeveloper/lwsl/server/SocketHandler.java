@@ -24,11 +24,11 @@ public class SocketHandler {
         try {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
-        }catch (IOException ignored){}
+        } catch (IOException ignored){}
 
     }
 
-    public void handle(){
+    public void handle() {
         Executors.newSingleThreadExecutor().execute(() -> {
             while(!socket.isClosed()) {
                 try {
@@ -44,12 +44,12 @@ public class SocketHandler {
         });
     }
 
-    public void sendPacket(Packet packet){
-        try{
+    public void sendPacket(Packet packet) {
+        try {
             dos.writeUTF(packet.getObject().toString());
             dos.flush();
             socketServer.getPacketSentEvents().forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
-        }catch (IOException ignored){}
+        } catch (IOException ignored){}
     }
 
     public Socket getSocket() {

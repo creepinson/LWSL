@@ -50,7 +50,7 @@ public class SocketClient {
         this.sslContext = sslContext;
     }
 
-    public void connect() throws ConnectException{
+    public void connect() throws ConnectException {
         try {
             if (sslContext != null) {
                 socket = sslContext.getSocketFactory().createSocket(address, port);
@@ -64,23 +64,23 @@ public class SocketClient {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
 
-        }catch (Exception e){
+        } catch (Exception e){
             throw new ConnectException(e);
         }
         connected = socket != null;
-        if(!connected) return;
+        if (!connected) return;
         connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
         listen();
     }
 
-    public void shutdown(){
-        try{
-            if(socket != null) socket.close();
+    public void shutdown() {
+        try {
+            if (socket != null) socket.close();
             connected = false;
-        }catch (IOException ignored){}
+        } catch (IOException ignored){}
     }
 
-    private void listen(){
+    private void listen() {
         Executors.newSingleThreadExecutor().execute(() -> {
             while(!socket.isClosed()) {
                 try {
@@ -97,8 +97,8 @@ public class SocketClient {
         });
     }
 
-    public void sendPacket(Packet packet){
-        try{
+    public void sendPacket(Packet packet) {
+        try {
             dos.writeUTF(packet.getObject().toString());
             dos.flush();
             packetSentEvents.forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
@@ -107,62 +107,62 @@ public class SocketClient {
         }
     }
 
-    public SocketClient setAddress(String address){
+    public SocketClient setAddress(String address) {
         this.address = address;
         return this;
     }
 
-    public SocketClient setPort(int port){
+    public SocketClient setPort(int port) {
         this.port = port;
         return this;
     }
 
-    public SocketClient setTimeout(int timeout){
+    public SocketClient setTimeout(int timeout) {
         this.timeout = timeout;
         return this;
     }
 
-    public SocketClient setKeepAlive(boolean keepalive){
+    public SocketClient setKeepAlive(boolean keepalive) {
         this.keepalive = keepalive;
         return this;
     }
 
-    public SocketClient addConnectEvent(OnConnectEvent event){
+    public SocketClient addConnectEvent(OnConnectEvent event) {
         connectEvents.add(event);
         return this;
     }
 
-    public SocketClient removeConnectEvent(OnConnectEvent event){
+    public SocketClient removeConnectEvent(OnConnectEvent event) {
         connectEvents.remove(event);
         return this;
     }
 
-    public SocketClient addDisconnectEvent(OnDisconnectEvent event){
+    public SocketClient addDisconnectEvent(OnDisconnectEvent event) {
         disconnectEvents.add(event);
         return this;
     }
 
-    public SocketClient removeDisconnectEvent(OnDisconnectEvent event){
+    public SocketClient removeDisconnectEvent(OnDisconnectEvent event) {
         disconnectEvents.remove(event);
         return this;
     }
 
-    public SocketClient addPacketReceivedEvent(OnPacketReceivedEvent event){
+    public SocketClient addPacketReceivedEvent(OnPacketReceivedEvent event) {
         packetReceivedEvents.add(event);
         return this;
     }
 
-    public SocketClient removePacketReceivedEvent(OnPacketReceivedEvent event){
+    public SocketClient removePacketReceivedEvent(OnPacketReceivedEvent event) {
         packetReceivedEvents.remove(event);
         return this;
     }
 
-    public SocketClient addPacketSentEvent(OnPacketSentEvent event){
+    public SocketClient addPacketSentEvent(OnPacketSentEvent event) {
         packetSentEvents.add(event);
         return this;
     }
 
-    public SocketClient removePacketSentEvent(OnPacketSentEvent event){
+    public SocketClient removePacketSentEvent(OnPacketSentEvent event) {
         packetSentEvents.remove(event);
         return this;
     }

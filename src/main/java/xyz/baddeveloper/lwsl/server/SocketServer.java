@@ -54,13 +54,11 @@ public class SocketServer {
         this.sslContext = sslContext;
     }
 
-    public void start(){
+    public void start() {
         try {
-            if (sslContext != null) {
-                serverSocket = sslContext.getServerSocketFactory().createServerSocket(port);
-            } else {
-                serverSocket = new ServerSocket(port);
-            }
+            if(sslContext != null) serverSocket = sslContext.getServerSocketFactory().createServerSocket(port);
+            else serverSocket = new ServerSocket(port);
+
             serverSocket.setSoTimeout(timeout);
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,16 +67,18 @@ public class SocketServer {
         listen();
     }
 
-    private void listen(){
-        if(!running)
+    private void listen() {
+        if (!running)
             return;
         controller = new Controller(this);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            while(running) try {
+            while (running) try {
                 Socket socket = serverSocket.accept();
-                if(maxconnections != 0 && clients.size()>=maxconnections)
+                if (maxconnections != 0 && clients.size() >= maxconnections) {
                     socket.close();
+                    return;
+                }
                 connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
                 SocketHandler socketHandler = new SocketHandler(this, socket);
                 clients.add(socketHandler);
@@ -88,72 +88,72 @@ public class SocketServer {
         readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
     }
 
-    public void stop(){
-        if(serverSocket != null)
+    public void stop() {
+        if (serverSocket != null)
             try { serverSocket.close(); } catch (IOException ignored) {}
     }
 
-    public SocketServer addPacketReceivedEvent(OnPacketReceivedEvent event){
+    public SocketServer addPacketReceivedEvent(OnPacketReceivedEvent event) {
         packetReceivedEvents.add(event);
         return this;
     }
 
-    public SocketServer removePacketReceivedEvent(OnPacketReceivedEvent event){
+    public SocketServer removePacketReceivedEvent(OnPacketReceivedEvent event) {
         packetReceivedEvents.remove(event);
         return this;
     }
 
-    public SocketServer addPacketSentEvent(OnPacketSentEvent event){
+    public SocketServer addPacketSentEvent(OnPacketSentEvent event) {
         packetSentEvents.add(event);
         return this;
     }
 
-    public SocketServer removePacketSentEvent(OnPacketSentEvent event){
+    public SocketServer removePacketSentEvent(OnPacketSentEvent event) {
         packetSentEvents.remove(event);
         return this;
     }
 
-    public SocketServer addReadyEvent(OnReadyEvent event){
+    public SocketServer addReadyEvent(OnReadyEvent event) {
         readyEvents.add(event);
         return this;
     }
 
-    public SocketServer removeReadyEvent(OnReadyEvent event){
+    public SocketServer removeReadyEvent(OnReadyEvent event) {
         readyEvents.remove(event);
         return this;
     }
 
-    public SocketServer addDisconnectEvent(OnDisconnectEvent event){
+    public SocketServer addDisconnectEvent(OnDisconnectEvent event) {
         disconnectEvents.add(event);
         return this;
     }
 
-    public SocketServer removeDisconnectEvent(OnDisconnectEvent event){
+    public SocketServer removeDisconnectEvent(OnDisconnectEvent event) {
         disconnectEvents.remove(event);
         return this;
     }
 
-    public SocketServer addConnectEvent(OnConnectEvent event){
+    public SocketServer addConnectEvent(OnConnectEvent event) {
         connectEvents.add(event);
         return this;
     }
 
-    public SocketServer removeConnectEvent(OnConnectEvent event){
+    public SocketServer removeConnectEvent(OnConnectEvent event) {
         connectEvents.remove(event);
         return this;
     }
 
-    public SocketServer setPort(int port){
+    public SocketServer setPort(int port) {
         this.port = port;
         return this;
     }
 
-    public SocketServer setMaxConnections(int maxConnections){
+    public SocketServer setMaxConnections(int maxConnections) {
         this.maxconnections = maxConnections;
         return this;
     }
 
-    public SocketServer setTimeout(int timeout){
+    public SocketServer setTimeout(int timeout) {
         this.timeout = timeout;
         return this;
     }

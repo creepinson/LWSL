@@ -13,7 +13,7 @@ public class Controller {
         this.socketServer = socketServer;
     }
 
-    public void sendPacketToAll(Packet packet){
+    public void sendPacketToAll(Packet packet) {
         socketServer.getClients().forEach(socketHandler -> socketHandler.sendPacket(packet));
     }
 
@@ -21,9 +21,9 @@ public class Controller {
         socketServer.getClients().forEach(this::kickClient);
     }
 
-    public SocketHandler getClientByIP(String hostname){
-        for(SocketHandler socketHandler : socketServer.getClients()){
-            if(socketHandler.getSocket().getInetAddress().getHostName().equals(hostname))
+    public SocketHandler getClientByIP(String hostname) {
+        for (SocketHandler socketHandler : socketServer.getClients()) {
+            if (socketHandler.getSocket().getInetAddress().getHostName().equals(hostname))
                 return socketHandler;
         }
         return null;

@@ -23,7 +23,6 @@ public class SocketClientTest {
 
     @Before
     public void setUp() {
-
         final SSLContextConfig config = SSLContextConfig.builder()
                 .keystoreLocation("testKeyStore.jks")
                 .keystorePassword("changeit")
@@ -32,7 +31,6 @@ public class SocketClientTest {
                 .build();
 
         sslContext = SSLContextUtility.getInstance().getSslContext(config);
-
         System.setProperty("javax.net.debug", "all");
     }
 
@@ -117,5 +115,4 @@ public class SocketClientTest {
                 .addConnectEvent(socket -> fail("Should not have connected"));
         socketClient.connect();
     }
-
 }
