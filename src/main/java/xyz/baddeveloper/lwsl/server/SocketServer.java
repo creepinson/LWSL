@@ -1,6 +1,10 @@
 package xyz.baddeveloper.lwsl.server;
 
-import xyz.baddeveloper.lwsl.server.events.*;
+import xyz.baddeveloper.lwsl.server.events.OnConnectEvent;
+import xyz.baddeveloper.lwsl.server.events.OnDisconnectEvent;
+import xyz.baddeveloper.lwsl.server.events.OnPacketReceivedEvent;
+import xyz.baddeveloper.lwsl.server.events.OnPacketSentEvent;
+import xyz.baddeveloper.lwsl.server.events.OnReadyEvent;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
