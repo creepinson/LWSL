@@ -1,4 +1,4 @@
-package xyz.baddeveloper.lwsl.client.exceptions;
+package xyz.baddeveloper.lwsl.exceptions;
 
 public class ConnectException extends Exception {
 

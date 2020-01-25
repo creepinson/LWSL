@@ -3,7 +3,7 @@ package xyz.baddeveloper.lwsl.client;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import xyz.baddeveloper.lwsl.client.exceptions.ConnectException;
+import xyz.baddeveloper.lwsl.exceptions.ConnectException;
 import xyz.baddeveloper.lwsl.packet.Packet;
 import xyz.baddeveloper.lwsl.server.SocketServer;
 import xyz.baddeveloper.lwsl.ssl.SSLContextConfig;

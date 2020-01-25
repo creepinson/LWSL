@@ -7,7 +7,7 @@ import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnDisconnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnPacketReceivedEvent;
 import xyz.baddeveloper.lwsl.client.events.OnPacketSentEvent;
-import xyz.baddeveloper.lwsl.client.exceptions.ConnectException;
+import xyz.baddeveloper.lwsl.exceptions.ConnectException;
 import xyz.baddeveloper.lwsl.packet.Packet;
 
 import javax.net.ssl.SSLContext;
