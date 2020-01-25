@@ -4,12 +4,15 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import xyz.baddeveloper.lwsl.exceptions.ConnectException;
+import xyz.baddeveloper.lwsl.exceptions.SSLException;
 import xyz.baddeveloper.lwsl.packet.Packet;
 import xyz.baddeveloper.lwsl.server.SocketServer;
 import xyz.baddeveloper.lwsl.ssl.SSLContextConfig;
 import xyz.baddeveloper.lwsl.ssl.SSLContextUtility;
 
 import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class SocketClientTest {
     private SSLContext sslContext;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchAlgorithmException, SSLException, KeyManagementException {
         final SSLContextConfig config = SSLContextConfig.builder()
                 .keystoreLocation("testKeyStore.jks")
                 .keystorePassword("changeit")
