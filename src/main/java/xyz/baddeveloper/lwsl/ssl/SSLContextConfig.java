@@ -1,8 +1,5 @@
 package xyz.baddeveloper.lwsl.ssl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 import java.security.KeyStore;
@@ -10,7 +7,6 @@ import java.util.Objects;
 
 public class SSLContextConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SSLContextConfig.class);
     private static final String PASSWORD_MASK = "*****";
 
     private String protocol;
@@ -41,17 +37,6 @@ public class SSLContextConfig {
         this.truststoreProvider = builder.truststoreProvider;
         this.truststoreLocation = builder.truststoreLocation;
         this.truststorePassword = builder.truststorePassword;
-        validatePasswords();
-    }
-
-    private void validatePasswords() {
-        if (this.keystorePassword == null) {
-            LOGGER.warn("The keystore password was not set. You may not be able to open the keystore.");
-        }
-
-        if (this.truststorePassword == null) {
-            LOGGER.warn("The truststore password was not set. You may not be able to open the truststore.");
-        }
     }
 
     public String getProtocol() {
@@ -259,7 +244,6 @@ public class SSLContextConfig {
         }
 
         public SSLContextConfig build() {
-            LOGGER.debug("Building SSL Context Config: {}", this);
             return new SSLContextConfig(this);
         }
 

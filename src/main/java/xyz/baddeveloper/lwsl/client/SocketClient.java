@@ -1,8 +1,6 @@
 package xyz.baddeveloper.lwsl.client;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import xyz.baddeveloper.lwsl.client.events.OnConnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnDisconnectEvent;
 import xyz.baddeveloper.lwsl.client.events.OnPacketReceivedEvent;
@@ -20,8 +18,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class SocketClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SocketClient.class);
 
     private String address;
     private int port;
@@ -103,7 +99,8 @@ public class SocketClient {
             dos.flush();
             packetSentEvents.forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
         } catch (IOException e) {
-            LOGGER.error("Failed to send packet.", e);
+            e.printStackTrace();
+            //TODO: Create exception
         }
     }
 
