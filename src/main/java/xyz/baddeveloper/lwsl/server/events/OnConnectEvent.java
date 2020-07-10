@@ -1,8 +1,8 @@
 package xyz.baddeveloper.lwsl.server.events;
 
-import java.net.Socket;
+import xyz.baddeveloper.lwsl.server.SocketHandler;
 
 public interface OnConnectEvent {
 
-    void onConnect(Socket socket);
+    void onConnect(SocketHandler socket);
 }

@@ -1,10 +1,6 @@
 package xyz.baddeveloper.lwsl.server;
 
-import xyz.baddeveloper.lwsl.server.events.OnConnectEvent;
-import xyz.baddeveloper.lwsl.server.events.OnDisconnectEvent;
-import xyz.baddeveloper.lwsl.server.events.OnPacketReceivedEvent;
-import xyz.baddeveloper.lwsl.server.events.OnPacketSentEvent;
-import xyz.baddeveloper.lwsl.server.events.OnReadyEvent;
+import xyz.baddeveloper.lwsl.server.events.*;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -56,7 +52,7 @@ public class SocketServer {
 
     public void start() {
         try {
-            if(sslContext != null) serverSocket = sslContext.getServerSocketFactory().createServerSocket(port);
+            if (sslContext != null) serverSocket = sslContext.getServerSocketFactory().createServerSocket(port);
             else serverSocket = new ServerSocket(port);
 
             serverSocket.setSoTimeout(timeout);
@@ -79,18 +75,22 @@ public class SocketServer {
                     socket.close();
                     return;
                 }
-                connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socket));
                 SocketHandler socketHandler = new SocketHandler(this, socket);
                 clients.add(socketHandler);
+                connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socketHandler));
                 socketHandler.handle();
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         });
         readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
     }
 
     public void stop() {
         if (serverSocket != null)
-            try { serverSocket.close(); } catch (IOException ignored) {}
+            try {
+                serverSocket.close();
+            } catch (IOException ignored) {
+            }
     }
 
     public SocketServer addPacketReceivedEvent(OnPacketReceivedEvent event) {
