@@ -1,6 +1,6 @@
 package xyz.baddeveloper.lwsl.server;
 
-import xyz.baddeveloper.lwsl.packet.Packet;
+import xyz.baddeveloper.lwsl.Packet;
 
 import java.io.IOException;
 import java.net.Socket;

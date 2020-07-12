@@ -1,6 +1,9 @@
 package xyz.baddeveloper.lwsl.server;
 
-import xyz.baddeveloper.lwsl.server.events.*;
+import dev.throwouterror.eventbus.SimpleEventManager;
+import xyz.baddeveloper.lwsl.server.events.ServerConnectEvent;
+import xyz.baddeveloper.lwsl.server.events.ServerDisconnectEvent;
+import xyz.baddeveloper.lwsl.server.events.ServerReadyEvent;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -18,11 +21,7 @@ public class SocketServer {
     private int maxconnections;
     private int timeout;
 
-    private List<OnConnectEvent> connectEvents = new ArrayList<>();
-    private List<OnDisconnectEvent> disconnectEvents = new ArrayList<>();
-    private List<OnReadyEvent> readyEvents = new ArrayList<>();
-    private List<OnPacketReceivedEvent> packetReceivedEvents = new ArrayList<>();
-    private List<OnPacketSentEvent> packetSentEvents = new ArrayList<>();
+    final SimpleEventManager eventManager = new SimpleEventManager();
 
     private List<SocketHandler> clients = new ArrayList<>();
 
@@ -69,20 +68,24 @@ public class SocketServer {
         controller = new Controller(this);
 
         Executors.newSingleThreadExecutor().execute(() -> {
+            SocketHandler socketHandler = null;
             while (running) try {
                 Socket socket = serverSocket.accept();
+                socketHandler = new SocketHandler(this, socket);
                 if (maxconnections != 0 && clients.size() >= maxconnections) {
+                    eventManager.fireEvent(new ServerDisconnectEvent(this, socketHandler));
                     socket.close();
                     return;
                 }
-                SocketHandler socketHandler = new SocketHandler(this, socket);
+
                 clients.add(socketHandler);
-                connectEvents.forEach(onConnectEvent -> onConnectEvent.onConnect(socketHandler));
+                eventManager.fireEvent(new ServerConnectEvent(this, socketHandler));
                 socketHandler.handle();
             } catch (IOException ignored) {
+                eventManager.fireEvent(new ServerDisconnectEvent(this, socketHandler));
             }
         });
-        readyEvents.forEach(readyEvent -> readyEvent.onReady(this));
+        eventManager.fireEvent(new ServerReadyEvent(this));
     }
 
     public void stop() {
@@ -93,53 +96,8 @@ public class SocketServer {
             }
     }
 
-    public SocketServer addPacketReceivedEvent(OnPacketReceivedEvent event) {
-        packetReceivedEvents.add(event);
-        return this;
-    }
-
-    public SocketServer removePacketReceivedEvent(OnPacketReceivedEvent event) {
-        packetReceivedEvents.remove(event);
-        return this;
-    }
-
-    public SocketServer addPacketSentEvent(OnPacketSentEvent event) {
-        packetSentEvents.add(event);
-        return this;
-    }
-
-    public SocketServer removePacketSentEvent(OnPacketSentEvent event) {
-        packetSentEvents.remove(event);
-        return this;
-    }
-
-    public SocketServer addReadyEvent(OnReadyEvent event) {
-        readyEvents.add(event);
-        return this;
-    }
-
-    public SocketServer removeReadyEvent(OnReadyEvent event) {
-        readyEvents.remove(event);
-        return this;
-    }
-
-    public SocketServer addDisconnectEvent(OnDisconnectEvent event) {
-        disconnectEvents.add(event);
-        return this;
-    }
-
-    public SocketServer removeDisconnectEvent(OnDisconnectEvent event) {
-        disconnectEvents.remove(event);
-        return this;
-    }
-
-    public SocketServer addConnectEvent(OnConnectEvent event) {
-        connectEvents.add(event);
-        return this;
-    }
-
-    public SocketServer removeConnectEvent(OnConnectEvent event) {
-        connectEvents.remove(event);
+    public SocketServer addEventListener(Object eventHandlerClass) {
+        eventManager.addEventListener(eventHandlerClass);
         return this;
     }
 
@@ -176,26 +134,6 @@ public class SocketServer {
 
     public ServerSocket getServerSocket() {
         return serverSocket;
-    }
-
-    public List<OnConnectEvent> getConnectEvents() {
-        return connectEvents;
-    }
-
-    public List<OnDisconnectEvent> getDisconnectEvents() {
-        return disconnectEvents;
-    }
-
-    public List<OnReadyEvent> getReadyEvents() {
-        return readyEvents;
-    }
-
-    public List<OnPacketReceivedEvent> getPacketReceivedEvents() {
-        return packetReceivedEvents;
-    }
-
-    public List<OnPacketSentEvent> getPacketSentEvents() {
-        return packetSentEvents;
     }
 
     public List<SocketHandler> getClients() {

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Creepinson
+ */
+
 package xyz.baddeveloper.lwsl.exceptions;
 
 public class ConnectException extends Exception {

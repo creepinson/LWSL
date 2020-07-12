@@ -3,9 +3,9 @@ package xyz.baddeveloper.lwsl.client;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import xyz.baddeveloper.lwsl.exceptions.ConnectException;
-import xyz.baddeveloper.lwsl.exceptions.SSLException;
-import xyz.baddeveloper.lwsl.packet.Packet;
+import xyz.baddeveloper.lwsl.ConnectException;
+import xyz.baddeveloper.lwsl.Packet;
+import xyz.baddeveloper.lwsl.SSLException;
 import xyz.baddeveloper.lwsl.server.SocketServer;
 import xyz.baddeveloper.lwsl.ssl.SSLContextConfig;
 import xyz.baddeveloper.lwsl.ssl.SSLContextUtility;
@@ -16,9 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class SocketClientTest {
 

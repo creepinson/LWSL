@@ -13,4 +13,11 @@ buildNumber.properties
 
 ### IntelliJ
 .idea/
-LWSL.iml
+*.iml
+
+# Gradle
+build.gradle
+settings.gradle
+.gradle
+build/
+

@@ -1,7 +1,10 @@
 package xyz.baddeveloper.lwsl.server;
 
 import org.json.JSONObject;
-import xyz.baddeveloper.lwsl.packet.Packet;
+import xyz.baddeveloper.lwsl.Packet;
+import xyz.baddeveloper.lwsl.server.events.ServerDisconnectEvent;
+import xyz.baddeveloper.lwsl.server.events.ServerPacketReceivedEvent;
+import xyz.baddeveloper.lwsl.server.events.ServerPacketSentEvent;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,19 +27,23 @@ public class SocketHandler {
         try {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
 
     }
 
     public void handle() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            while(!socket.isClosed()) {
+            while (!socket.isClosed()) {
                 try {
-                    Packet in = new Packet(new JSONObject(dis.readUTF()));
-                    socketServer.getPacketReceivedEvents().forEach(onPacketReceivedEvent -> onPacketReceivedEvent.onPacketReceived(this, in));
+                    Packet packetIn = new Packet(new JSONObject(dis.readUTF()));
+                    socketServer.eventManager.fireEvent(new ServerPacketReceivedEvent(socketServer, this, packetIn));
                 } catch (Exception e) {
-                    try {socket.close();} catch (IOException ignored) {}
-                    socketServer.getDisconnectEvents().forEach(onDisconnectEvent -> onDisconnectEvent.onDisconnect(socket));
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {
+                    }
+                    socketServer.eventManager.fireEvent(new ServerDisconnectEvent(socketServer, this));
                     socketServer.getClients().remove(this);
                     break;
                 }
@@ -46,10 +53,12 @@ public class SocketHandler {
 
     public void sendPacket(Packet packet) {
         try {
+            packet.setName(packet.getClass().getSimpleName().replace("Packet", ""));
             dos.writeUTF(packet.getObject().toString());
             dos.flush();
-            socketServer.getPacketSentEvents().forEach(onPacketSentEvent -> onPacketSentEvent.onPacketSent(this, packet));
-        } catch (IOException ignored){}
+            socketServer.eventManager.fireEvent(new ServerPacketSentEvent(socketServer, packet));
+        } catch (IOException ignored) {
+        }
     }
 
     public Socket getSocket() {
