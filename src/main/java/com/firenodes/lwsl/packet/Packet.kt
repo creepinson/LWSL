@@ -6,11 +6,11 @@ import reactor.core.publisher.Flux
 import reactor.netty.Connection
 
 open class Packet @JvmOverloads constructor(var jsonObject: JsonObject = JsonObject()) {
-    infix fun Packet.isOf(packet: Class<out Packet?>): Boolean {
+    infix fun isOf(packet: Class<out Packet?>): Boolean {
         return isOf(packet.simpleName.replace("Packet", ""))
     }
 
-    infix fun Packet.isOf(packetName: String): Boolean {
+    infix fun isOf(packetName: String): Boolean {
         return jsonObject.has("packetName") && jsonObject.get("packetName").asString == packetName
     }
 
