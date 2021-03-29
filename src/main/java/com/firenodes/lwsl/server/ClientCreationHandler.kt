@@ -1,4 +1,4 @@
-package xyz.baddeveloper.lwsl.server
+package com.firenodes.lwsl.server
 
 interface ClientCreationHandler {
     /**

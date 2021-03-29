@@ -1,21 +1,23 @@
-package xyz.baddeveloper.lwsl.client
+package com.firenodes.lwsl.client
 
+import com.firenodes.lwsl.Events
+import com.firenodes.lwsl.client.events.ClientEvent
+import com.firenodes.lwsl.client.events.ClientPacketEvent
+import com.firenodes.lwsl.exceptions.ConnectException
+import com.firenodes.lwsl.packet.Packet
 import dev.throwouterror.eventbus.TypedEventBus
 import io.netty.handler.logging.LogLevel
-import org.json.JSONObject
 import reactor.core.publisher.Mono
 import reactor.netty.Connection
 import reactor.netty.tcp.SslProvider
 import reactor.netty.tcp.TcpClient
-import xyz.baddeveloper.lwsl.Events
-import xyz.baddeveloper.lwsl.client.events.ClientEvent
-import xyz.baddeveloper.lwsl.client.events.ClientPacketEvent
-import xyz.baddeveloper.lwsl.exceptions.ConnectException
-import xyz.baddeveloper.lwsl.packet.Packet
 import java.io.IOException
-import javax.net.ssl.SSLContext
 
-class SocketClient @JvmOverloads constructor(var address: String, var port: Int, private val sslProvider: SslProvider? = null) {
+class SocketClient @JvmOverloads constructor(
+    var address: String,
+    var port: Int,
+    private val sslProvider: SslProvider? = null
+) {
     var timeout = 0
         private set
     var isKeepAlive = false
@@ -43,11 +45,18 @@ class SocketClient @JvmOverloads constructor(var address: String, var port: Int,
     }
 
     private fun listen() {
-        client.doOnConnected {
+        client.doOnConnected { it ->
             eventManager.fireEvent(ClientEvent(Events.READY.toString(), this))
             try {
-                val packetIn = Packet(JSONObject(it.inbound().receiveObject().subscribe()))
-                eventManager.fireEvent(ClientPacketEvent(Events.PACKET_RECEIVED.toString(), this, packetIn))
+                Packet.parseInbound(it).subscribe {
+                    eventManager.fireEvent(
+                        ClientPacketEvent(
+                            Events.PACKET_RECEIVED.toString(),
+                            this,
+                            it
+                        )
+                    )
+                }
             } catch (e: Exception) {
                 try {
                     connection.disposeNow()
@@ -91,13 +100,12 @@ class SocketClient @JvmOverloads constructor(var address: String, var port: Int,
         return this
     }
 
-    fun setKeepAlive(keepalive: Boolean): SocketClient {
-        isKeepAlive = keepalive
+    fun setKeepAlive(keepAlive: Boolean): SocketClient {
+        isKeepAlive = keepAlive
         return this
     }
 
     fun createEventBus(): TypedEventBus<ClientEvent> {
         return eventManager
     }
-
 }

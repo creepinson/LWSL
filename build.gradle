@@ -5,7 +5,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
 }
 
 repositories {
@@ -19,13 +19,15 @@ repositories {
 }
 
 dependencies {
-    api 'com.github.creepinson:EventBus:-SNAPSHOT'
-    api 'io.projectreactor.netty:reactor-netty:0.9.10.RELEASE'
+    api 'com.gitlab.creepinson:event-bus:master-SNAPSHOT'
+    implementation "com.github.throw-out-error:toe-utils:master-SNAPSHOT"
+    api 'io.projectreactor.netty:reactor-netty:1.0.5'
     testImplementation 'junit:junit:4.12'
+    implementation "com.google.code.gson:gson:2.8.6"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
-group = 'dev.throwouterror'
+group = 'com.firenodes'
 version = '2.2.0-RELEASE'
 sourceCompatibility = '1.8'
 

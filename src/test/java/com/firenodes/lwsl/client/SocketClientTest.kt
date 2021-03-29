@@ -1,18 +1,14 @@
-package xyz.baddeveloper.lwsl.client
+package com.firenodes.lwsl.client
 
-import org.json.JSONObject
+import com.firenodes.lwsl.Events
+import com.firenodes.lwsl.packet.Packet
+import com.firenodes.lwsl.server.SocketServer
+import com.firenodes.lwsl.server.events.ServerPacketEvent
+import com.google.gson.JsonObject
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
-import xyz.baddeveloper.lwsl.Events
-import xyz.baddeveloper.lwsl.packet.Packet
-import xyz.baddeveloper.lwsl.server.SocketServer
-import xyz.baddeveloper.lwsl.server.events.ServerPacketEvent
-import java.security.KeyManagementException
-import java.security.NoSuchAlgorithmException
 import java.util.*
 import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLException
 
 class SocketClientTest {
     private var sslContext: SSLContext? = null
@@ -22,7 +18,7 @@ class SocketClientTest {
     fun testSocketClient() {
         val receivedPackets: MutableList<Packet> = ArrayList()
         val socketServer: SocketServer = SocketServer(25566)
-                .setMaxConnections(0).start()
+            .setMaxConnections(0).start()
         socketServer.createEventBus().observeEvents().subscribe() {
             when (it.type) {
                 Events.PACKET_RECEIVED.toString() -> {
@@ -32,8 +28,9 @@ class SocketClientTest {
         }
 
     }
+
     val socketClient = SocketClient("localhost", 25566)
-    var jsonObject = JSONObject()
+    var jsonObject = JsonObject()
 
     @Throws(InterruptedException::class)
     private fun awaitOrFail(list: List<*>, expectedSize: Int, timeout: Int) {

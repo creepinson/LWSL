@@ -1,4 +1,4 @@
-package xyz.baddeveloper.lwsl.server
+package com.firenodes.lwsl.server
 
 import dev.throwouterror.eventbus.TypedEventBus
 import io.netty.handler.logging.LogLevel
@@ -6,10 +6,10 @@ import io.netty.handler.timeout.ReadTimeoutHandler
 import reactor.netty.DisposableServer
 import reactor.netty.tcp.SslProvider
 import reactor.netty.tcp.TcpServer
-import xyz.baddeveloper.lwsl.Events
-import xyz.baddeveloper.lwsl.exceptions.ConnectException
-import xyz.baddeveloper.lwsl.packet.ClientIdentificationPacket
-import xyz.baddeveloper.lwsl.server.events.ServerEvent
+import com.firenodes.lwsl.Events
+import com.firenodes.lwsl.exceptions.ConnectException
+import com.firenodes.lwsl.packet.ClientIdentificationPacket
+import com.firenodes.lwsl.server.events.ServerEvent
 import java.io.IOException
 import java.lang.Exception
 import java.util.concurrent.TimeUnit

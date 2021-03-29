@@ -1,6 +1,6 @@
-package xyz.baddeveloper.lwsl.server
+package com.firenodes.lwsl.server
 
-import xyz.baddeveloper.lwsl.packet.Packet
+import com.firenodes.lwsl.packet.Packet
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket

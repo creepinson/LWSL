@@ -1,4 +1,4 @@
-package xyz.baddeveloper.lwsl
+package com.firenodes.lwsl
 
 enum class Events(val id: String) {
     READY("ready"),
