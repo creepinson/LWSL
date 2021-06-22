@@ -5,7 +5,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
 }
 
 repositories {
@@ -14,7 +14,7 @@ repositories {
         url = "https://jitpack.io"
     }
     maven {
-        url = 'http://repo.maven.apache.org/maven2'
+        url = 'https://repo.maven.apache.org/maven2'
     }
 }
 
@@ -28,13 +28,17 @@ dependencies {
 }
 
 group = 'com.firenodes'
-version = '2.2.0-RELEASE'
-sourceCompatibility = '1.8'
+version = "v1.0.0-dev"
+sourceCompatibility = '11'
 
 publishing {
     publications {
         maven(MavenPublication) {
-            from(components.java)
+            groupId = project.group
+            artifactId = rootProject.name
+            version = project.version
+
+            from components.java
         }
     }
 }
@@ -44,11 +48,11 @@ tasks.withType(JavaCompile) {
 }
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
